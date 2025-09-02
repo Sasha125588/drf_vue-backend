@@ -5,6 +5,7 @@ Django==5.2.5
 django-cors-headers==4.7.0
 django-filter==25.1
 djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
 filelock==3.18.0
 fonttools==4.57.0
 fsspec==2025.5.1
@@ -19,6 +20,7 @@ packaging==25.0
 peppercorn==0.6
 pillow==11.2.1
 psycopg2==2.9.10
+PyJWT==2.10.1
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 python-decouple==3.8
