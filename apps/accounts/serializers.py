@@ -39,6 +39,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
+    class Meta:
+        model = User
+        fields = ("email", "password")
+
     def validate(self, attrs):
         email = attrs.get("email")
         password = attrs.get("password")
@@ -85,10 +89,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created_at", "updated_at")
 
     def get_posts_count(self, obj):
-        return obj.posts.count()
+        try:
+            return obj.posts.count()
+        except AttributeError:
+            return 0
 
     def get_comments_count(self, obj):
-        return obj.comments.count()
+        try:
+            return obj.comments.count()
+        except AttributeError:
+            return 0
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
