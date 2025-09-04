@@ -3,6 +3,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from django.contrib.auth import login
 from rest_framework.decorators import api_view, permission_classes
+
 from .models import User
 from .serializers import (
     UserRegistrationSerializer,

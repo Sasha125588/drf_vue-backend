@@ -1,7 +1,7 @@
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from apps.post.models import Category, Post
+from .models import Category, Post
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class CategorySerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostListSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
     category = serializers.StringRelatedField()
     comments_count = serializers.ReadOnlyField()

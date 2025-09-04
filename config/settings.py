@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 from decouple import config
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
@@ -27,12 +26,9 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
 ]
 
-
-LOCAL_APPS = ["apps.accounts", "apps.posts"]
-
+LOCAL_APPS = ["apps.user", "apps.post"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -45,9 +41,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-
 ROOT_URLCONF = "config.urls"
-
 
 TEMPLATES = [
     {
