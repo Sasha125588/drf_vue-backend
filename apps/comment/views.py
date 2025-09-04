@@ -46,7 +46,6 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.filter(is_active=True).select_related("author", "post")
     serializer_class = CommentDetailSerializer
     permission_classes = [IsAuthorOrReadOnly]
-    lookup_field = "id"
 
     def get_serializer_class(self):
         if self.request.method == "PUT" or self.request.method == "PATCH":
@@ -103,7 +102,7 @@ def post_comments(request, post_id):
     post = get_object_or_404(Post, id=post_id, status="published")
 
     comments = (
-        Comment.objects.filter(post=post, is_active=True, parent=None)
+        Comment.objects.filter(post=post, is_active=True)
         .select_related("author")
         .prefetch_related("replies")
         .order_by("-created_at")

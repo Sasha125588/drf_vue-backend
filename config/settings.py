@@ -8,7 +8,7 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "*", "192.168.31.137"]
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -32,7 +32,12 @@ LOCAL_APPS = [
     "apps.comment",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = [
+    *DJANGO_APPS,
+    *THIRD_PARTY_APPS,
+    *LOCAL_APPS,
+    "drf_yasg",
+]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -174,9 +179,13 @@ REST_FRAMEWORK = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Укажите порт, на котором работает ваш Vue.js
+    "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://0.0.0.0:5173",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 from datetime import timedelta
@@ -256,7 +265,6 @@ LOGGING = {
     },
 }
 
-# Создаем директорию для логов
 import os
 
 os.makedirs(BASE_DIR / "logs", exist_ok=True)

@@ -450,6 +450,294 @@ Create these environment variables in Postman:
    - Can update their published and draft posts
    - Cannot update other users' posts
 
+## Comment Endpoints
+
+### 25. Get All Comments
+
+- **Method:** GET
+- **URL:** `{{base_url}}/api/v1/comments/`
+- **Headers:** None required
+- **Query Parameters (optional):**
+  - `post`: filter by post ID
+  - `author`: filter by author ID
+  - `parent`: filter by parent comment ID (null for main comments)
+  - `search`: search in comment content
+  - `ordering`: `created_at`, `updated_at`, `-created_at`, `-updated_at`
+  - `page`: page number for pagination
+
+### 26. Create Comment
+
+- **Method:** POST
+- **URL:** `{{base_url}}/api/v1/comments/`
+- **Headers:**
+  - `Authorization: Bearer {{access_token}}`
+  - `Content-Type: application/json`
+- **Body:**
+
+```json
+{
+  "content": "This is a great article! Thanks for sharing.",
+  "post": 1,
+  "parent": null
+}
+```
+
+### 27. Create Reply to Comment
+
+- **Method:** POST
+- **URL:** `{{base_url}}/api/v1/comments/`
+- **Headers:**
+  - `Authorization: Bearer {{access_token}}`
+  - `Content-Type: application/json`
+- **Body:**
+
+```json
+{
+  "content": "I totally agree with your comment!",
+  "post": 1,
+  "parent": 5
+}
+```
+
+### 28. Get Comment Details
+
+- **Method:** GET
+- **URL:** `{{base_url}}/api/v1/comments/1/`
+- **Headers:** None required
+- **Note:** This will show the comment with all its replies
+
+### 29. Update Comment
+
+- **Method:** PUT
+- **URL:** `{{base_url}}/api/v1/comments/1/`
+- **Headers:**
+  - `Authorization: Bearer {{access_token}}`
+  - `Content-Type: application/json`
+- **Body:**
+
+```json
+{
+  "content": "This is my updated comment content."
+}
+```
+
+### 30. Partial Update Comment
+
+- **Method:** PATCH
+- **URL:** `{{base_url}}/api/v1/comments/1/`
+- **Headers:**
+  - `Authorization: Bearer {{access_token}}`
+  - `Content-Type: application/json`
+- **Body:**
+
+```json
+{
+  "content": "Just updating the comment text"
+}
+```
+
+### 31. Delete Comment (Soft Delete)
+
+- **Method:** DELETE
+- **URL:** `{{base_url}}/api/v1/comments/1/`
+- **Headers:** `Authorization: Bearer {{access_token}}`
+- **Note:** This performs a soft delete (sets is_active=False)
+
+### 32. Get My Comments
+
+- **Method:** GET
+- **URL:** `{{base_url}}/api/v1/comments/my-comments/`
+- **Headers:** `Authorization: Bearer {{access_token}}`
+- **Query Parameters (optional):**
+  - `post`: filter by post ID
+  - `parent`: filter by parent comment ID
+  - `is_active`: filter by active status (true/false)
+  - `search`: search in comment content
+  - `ordering`: `created_at`, `updated_at`, `-created_at`, `-updated_at`
+
+### 33. Get Comments for Specific Post
+
+- **Method:** GET
+- **URL:** `{{base_url}}/api/v1/comments/post/1/`
+- **Headers:** None required
+- **Note:** Returns only main comments (not replies) for the post
+
+### 34. Get Replies for Specific Comment
+
+- **Method:** GET
+- **URL:** `{{base_url}}/api/v1/comments/comment/5/replies/`
+- **Headers:** None required
+- **Note:** Returns all replies to a specific comment
+
+## Sample Comment Data for Testing
+
+### Creating Main Comments
+
+```json
+[
+  {
+    "content": "Excellent article! Very informative and well-written.",
+    "post": 1,
+    "parent": null
+  },
+  {
+    "content": "I have a question about the implementation details...",
+    "post": 1,
+    "parent": null
+  },
+  {
+    "content": "This helped me solve a problem I was having. Thank you!",
+    "post": 2,
+    "parent": null
+  }
+]
+```
+
+### Creating Replies
+
+```json
+[
+  {
+    "content": "I'm glad you found it helpful!",
+    "post": 1,
+    "parent": 1
+  },
+  {
+    "content": "Feel free to ask any specific questions.",
+    "post": 1,
+    "parent": 2
+  },
+  {
+    "content": "What specific part are you referring to?",
+    "post": 1,
+    "parent": 2
+  }
+]
+```
+
+## Extended Error Responses for Comments
+
+### Invalid Post Reference (400)
+
+```json
+{
+  "non_field_errors": ["Post is not published"]
+}
+```
+
+### Invalid Parent Comment (400)
+
+```json
+{
+  "parent": ["Parent does not match"]
+}
+```
+
+### Comment Not Found (404)
+
+```json
+{
+  "detail": "Not found."
+}
+```
+
+### Cannot Modify Other User's Comment (403)
+
+```json
+{
+  "detail": "You do not have permission to perform this action."
+}
+```
+
+## Extended Testing Flow
+
+### Complete Testing Sequence with Comments
+
+1. **Setup:**
+
+   - Register a new user
+   - Login to get tokens
+   - Create categories and posts
+
+2. **Categories & Posts:**
+
+   - Create several categories
+   - Create posts in different categories
+   - List all posts
+
+3. **Comments:**
+
+   - Create main comments on different posts
+   - Create replies to existing comments
+   - List all comments (test filtering)
+   - Get comments for specific post
+   - Get replies for specific comment
+   - Update your own comments
+   - Try to update someone else's comment (should fail)
+   - Get your own comments
+   - Test nested comment structure
+
+4. **Advanced Comment Testing:**
+
+   - Create comment chains (reply to replies)
+   - Test comment permissions
+   - Test soft delete functionality
+   - Test comment counting on posts
+
+5. **Cleanup:**
+   - Delete test comments
+   - Delete test posts
+   - Delete test categories
+   - Logout
+
+### Testing Comment Permissions
+
+1. **Anonymous User:**
+
+   - Can view active comments on published posts
+   - Cannot create, update, or delete comments
+   - Cannot view inactive comments
+
+2. **Authenticated User:**
+
+   - Can create comments on published posts
+   - Can only update/delete their own comments
+   - Can reply to any active comment
+   - Can view all their own comments (including inactive)
+
+3. **Comment Author:**
+   - Can edit their own comments
+   - Can soft-delete their own comments
+   - Cannot modify other users' comments
+
+### Comment-Specific Testing Scenarios
+
+1. **Nested Comments:**
+
+   - Create a main comment
+   - Reply to that comment
+   - Reply to the reply (3 levels deep)
+   - Verify proper parent-child relationships
+
+2. **Comment Validation:**
+
+   - Try to comment on a draft post (should fail)
+   - Try to reply with wrong post ID (should fail)
+   - Try to create empty comment (should fail)
+
+3. **Comment Counting:**
+
+   - Create several comments on a post
+   - Verify the comment count is correct
+   - Soft-delete a comment
+   - Verify the count decreases
+
+4. **Search and Filtering:**
+   - Search comments by content
+   - Filter comments by post
+   - Filter comments by author
+   - Filter main comments vs replies
+
 ## Notes
 
 - All timestamps are in UTC
@@ -457,5 +745,10 @@ Create these environment variables in Postman:
 - Category slugs are automatically generated from names
 - View counts are incremented on each GET request to post detail
 - Only published posts are shown to anonymous users
-- Search functionality works across title and content fields
+- Only active comments are shown to anonymous users
+- Comment deletion is soft delete (sets is_active=False)
+- Comments can be nested (replies to replies)
+- Search functionality works across title and content fields for posts and comments
 - Pagination is set to 20 items per page by default
+- Comment replies are loaded when getting comment details
+- Comments are ordered by creation date (newest first) by default
