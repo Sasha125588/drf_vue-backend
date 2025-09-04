@@ -10,15 +10,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
-            "username",
+        fields = [
             "username",
             "email",
             "password",
             "password_confirm",
             "first_name",
             "last_name",
-        )
+        ]
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password_confirm"]:
@@ -41,7 +40,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "password")
+        fields = ["email", "password"]
 
     def validate(self, attrs):
         email = attrs.get("email")
@@ -72,7 +71,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
+        fields = [
             "id",
             "username",
             "email",
@@ -85,8 +84,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "updated_at",
             "posts_count",
             "comments_count",
-        )
-        read_only_fields = ("id", "created_at", "updated_at")
+        ]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
     def get_posts_count(self, obj):
         try:
@@ -104,7 +103,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "avatar", "bio")
+        fields = ["first_name", "last_name", "avatar", "bio"]
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
@@ -122,7 +121,7 @@ class UserChangePasswordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("old_password", "new_password", "new_password_confirm")
+        fields = ["old_password", "new_password", "new_password_confirm"]
 
     def validate_old_password(self, old_password):
         user = self.context["request"].user

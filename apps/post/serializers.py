@@ -94,7 +94,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "avatar": author.avatar.url if author.avatar else None,
         }
 
-    def get_category_inso(self, obj):
+    def get_category_info(self, obj):
         category = obj.category
 
         if not category:
@@ -116,7 +116,7 @@ class PostCreateUpdateSerializer(serializers.ModelSerializer):
         validated_data["author"] = self.context["request"].user
         validated_data["slug"] = slugify(validated_data["title"])
 
-        return self().create(validated_data)
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         if "title" in validated_data:
