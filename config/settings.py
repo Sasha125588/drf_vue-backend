@@ -135,7 +135,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Custom User Model
 
 
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "user.User"
 
 
 # REST Framework Configuration
