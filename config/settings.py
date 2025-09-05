@@ -30,6 +30,8 @@ LOCAL_APPS = [
     "apps.user",
     "apps.post",
     "apps.comment",
+    "apps.subscribe",
+    "apps.payment",
 ]
 
 INSTALLED_APPS = [
