@@ -47,7 +47,11 @@ class Subscription(models.Model):
         on_delete=models.CASCADE,
         related_name="subscriptions",
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="pending",
+    )
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     stripe_subscription_id = models.CharField(
@@ -152,7 +156,9 @@ class SubscriptionHistory(models.Model):
     ]
 
     subscription = models.ForeignKey(
-        Subscription, on_delete=models.CASCADE, related_name="history"
+        Subscription,
+        on_delete=models.CASCADE,
+        related_name="history",
     )
     action = models.CharField(max_length=20, choices=ACTION_CHOICES)
     description = models.TextField(blank=True)
